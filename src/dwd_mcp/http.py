@@ -16,6 +16,7 @@ UA = (
 )
 TIMEOUT = 25.0
 PROBE_URL = "https://api.open-meteo.com/v1/dwd-icon?latitude=52.52&longitude=13.41&current=temperature_2m&forecast_days=1"
+SOURCE = "DWD (Deutscher Wetterdienst)"
 
 
 class DwdMcpError(RuntimeError):
@@ -67,14 +68,14 @@ def fetch_text(url: str) -> str:
     assert r is not None  # loop always assigns r or raises
     if r.status_code == 403:
         raise DwdMcpError(
-            f"{spec['source']} returned HTTP 403 for {url} (bot wall) — try again later"
+            f"{SOURCE} returned HTTP 403 for {url} (bot wall) — try again later"
         )
     if r.status_code == 429:
         raise DwdMcpError(
-            f"{spec['source']} rate-limited the request (HTTP 429) — try again later"
+            f"{SOURCE} rate-limited the request (HTTP 429) — try again later"
         )
     if r.status_code != 200:
-        raise DwdMcpError(f"{spec['source']} returned HTTP {r.status_code} for {url}")
+        raise DwdMcpError(f"{SOURCE} returned HTTP {r.status_code} for {url}")
     return r.text
 
 
